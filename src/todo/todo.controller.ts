@@ -1,8 +1,24 @@
-import { Controller, Delete, Get, Post, Put, Req, Res } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Post,
+  Put,
+  Req,
+  Res,
+} from '@nestjs/common';
 import { Request, Response } from 'express';
+import { Todo } from './entities/todo.entity';
 
 @Controller('todo')
 export class TodoController {
+  todos: Todo[];
+
+  constructor() {
+    this.todos = [];
+  }
+
   @Get('v2')
   getTodosV2(@Req() request: Request, @Res() response: Response) {
     console.log(request);
@@ -12,16 +28,23 @@ export class TodoController {
       contenu: `Je suis une réponse générée à partir de l'objet Response de express`,
     });
   }
+
   @Get()
   getTodos() {
     console.log('Récupérer liste des todos');
-    return 'Liste des TODOS';
+    return this.todos;
   }
 
   @Post()
-  addTodo() {
+  addTodo(@Body() newTodo: Todo) {
     console.log('ajouter todo');
-    return 'Add TODO';
+    if (this.todos.length) {
+      newTodo.id = this.todos[this.todos.length - 1].id + 1;
+    } else {
+      newTodo.id = 1;
+    }
+    this.todos.push(newTodo);
+    return newTodo;
   }
 
   @Delete()

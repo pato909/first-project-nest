@@ -2,13 +2,19 @@
 GET http://localhost:3000/todo
 Accept: application/json
 
-### GET
+### GET v2
 GET http://localhost:3000/todo/v2
 Accept: application/json
 
 ### POST
 POST http://localhost:3000/todo
+Content-Type: application/json
 Accept: application/json
+
+{
+  "name": "2ème TODO",
+  "description": "Deuxième TODO"
+}
 
 ### DELETE
 DELETE http://localhost:3000/todo
