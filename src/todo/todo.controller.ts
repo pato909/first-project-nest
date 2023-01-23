@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  NotFoundException,
   Param,
   Post,
   Put,
@@ -65,15 +66,32 @@ export class TodoController {
     return newTodo;
   }
 
-  @Delete()
-  deleteTodo() {
+  @Delete('/:id')
+  deleteTodo(@Param('id') id: number) {
     console.log('supprimer todo');
-    return 'Delete Todo';
+    const index = this.todos.findIndex((todo) => todo.id == id);
+    console.log(index);
+    if (index >= 0) {
+      this.todos.splice(index, 1);
+    } else {
+      throw new NotFoundException(`Le todo d'id ${id} n'existe pas`);
+    }
+
+    return {
+      message: `Le todo ${id} a été supprimer`,
+      count: 1,
+    };
   }
 
-  @Put()
-  modifierTodo() {
-    console.log('modifier todo');
-    return 'Update Todo';
+  @Put('/:id')
+  modifierTodo(@Param('id') id: number, @Body() body: Partial<Todo>) {
+    const todo = this.getTodoById(id);
+    if (todo) {
+      todo.description = body.description ? body.description : todo.description;
+      todo.name = body.name ? body.name : todo.name;
+      return todo;
+    } else {
+      throw new NotFoundException(`Le todo d'id ${id} n'existe pas`);
+    }
   }
 }
