@@ -1,5 +1,9 @@
 ### GET
-GET http://localhost:3000/todo
+GET http://localhost:3000/todo?page=5
+Accept: application/json
+
+### GET BY ID
+GET http://localhost:3000/todo/2
 Accept: application/json
 
 ### GET v2

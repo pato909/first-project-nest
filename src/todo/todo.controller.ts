@@ -3,8 +3,10 @@ import {
   Controller,
   Delete,
   Get,
+  Param,
   Post,
   Put,
+  Query,
   Req,
   Res,
 } from '@nestjs/common';
@@ -17,6 +19,16 @@ export class TodoController {
 
   constructor() {
     this.todos = [];
+    this.todos.push({
+      id: 1,
+      name: 'First TODO',
+      description: 'first description',
+    });
+    this.todos.push({
+      id: 2,
+      name: 'Second TODO',
+      description: 'second description',
+    });
   }
 
   @Get('v2')
@@ -30,9 +42,15 @@ export class TodoController {
   }
 
   @Get()
-  getTodos() {
+  getTodos(@Query('page') page: number): Todo[] {
     console.log('Récupérer liste des todos');
+    console.log(`param : ${page}`);
     return this.todos;
+  }
+
+  @Get('/:id')
+  getTodoById(@Param('id') id: number): Todo {
+    return this.todos.filter((todo) => todo.id == id)[0];
   }
 
   @Post()
